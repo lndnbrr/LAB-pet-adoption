@@ -285,7 +285,7 @@ const renderToDom = (divIdInIndexHtml, htmlToRenderFromMainJS) => {
 const cardsOnDom = (potentialArray) => {
   let domString = "";
   for (const pet of potentialArray) {
-    domString += `<div class="card" style="width: 18rem;">
+    domString += `<div class="card">
     <img src="${pet.imageUrl}" class="card-img-top" alt="${pet.name}">
     <div class="card-body">
       <p class="card-text">${pet.name}</p>
@@ -369,3 +369,41 @@ bigDino.addEventListener("click", () => {
   const allTheDinos = filter(pets, "dino");
   cardsOnDom(allTheDinos);
 });
+
+
+// ******************** //
+// ****** CREATE ****** //
+// ******************** //
+
+
+// 1. select/target the form on the DOM
+const selectForm = document.querySelector('form');
+
+// 2.1. create a function that grabs all the values from the form
+
+const allFormVals = (e)=>{ // NEW NOTES: we plug in the (e) since we are trying to run .preventDefault, or in this case, prevent the page from reloading and not loading in our pet that we just created when we hit the submit button. Using 'e' as a parameter allows methods to run without something to select. If we didn't have this e.preventDefault() method, we would not need (e) to pass through as a parameter at all.
+  e.preventDefault();
+
+  const newMember = { // NEW NOTES: this is an object skeleton that grabs the values from the form. The way an object is structured is key: value. The key has to be the same as the keys in the pets array. The value is what will be shown as a pet card(with exception to id). .value actually accepts the values from the form when submitted.
+    id: pets.length + 1,
+    name: document.querySelector("#petName").value,
+    color: document.querySelector("#petFavoriteColor").value,
+    specialSkill: document.querySelector("#petSpecialSkill").value,
+    type: document.querySelector("#petType").value,
+    imageUrl: document.querySelector("#petImage").value,
+  };
+  // 2.2 pushes the new object to the array. 
+  // NEW NOTES: we are pushing the newMember object to the pets array, not cardsOnDom.
+  pets.push(newMember);
+
+  // 2.3 then repaints the DOM with the new teammate.
+  // NEW NOTES: we are now calling all the pets back to the screen with the acception of the newMember being pushed. So cardsOnDom is loaded first, where we do cardsOnDom with all the pets, and pushing the newMember adds the new pet at the end of this array.
+  cardsOnDom(pets);
+
+  selectForm.reset(); //NEW NOTES: This clears the form so then a new pet can be submitted. Since the previous pet was pushed to the array, it should be all good for this to clear the users info.
+};
+
+// 3. Add an event listener for the form submit and pass it the function (callback). 
+// NEW NOTES: This line of code adds an event listener to selectForm, which is the equivalent of form in HTML. We use 'submit' instead of 'click' since we are submitting the values when we press that button and not just clicking a button. Then when we click the submit button, we are running the function allFormVals, which doesn't reload the page, creates a new object, uses the values from the form to fill that new object, pushes the object onto the pet array, shows the updated pets array with the new memeber, and clears the info from the form when everything is done updating.
+
+selectForm.addEventListener('submit', allFormVals);
