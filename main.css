@@ -2,8 +2,22 @@ body{
   background-color: darksalmon;
 }
 
-#petsToHTML{
+#app{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.petButtons{
+  display: flex;
+  justify-content: center;
+}
+
+button{
+  margin: 5px 20px 10px 20px;
+}
+
+.card{
+  margin-bottom: 10px;
 }
