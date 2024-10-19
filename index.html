@@ -8,13 +8,38 @@
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
+
   <div class="petButtons">
     <button type="button" class="btn btn-primary" id="allPetsButton">All Pets</button>
     <button type="button" class="btn btn-warning" id="justCatsButton">cats</button>
     <button type="button" class="btn btn-danger" id="justDogsButton">dogs</button>
     <button type="button" class="btn btn-success" id="justDinosButton">dinos</button>
   </div>
-
+  
+  <form>
+  <div class="form-floating mb-3">
+  <input type="text" class="form-control" id="petName" placeholder="nameOfAnimal" required>
+  <label for="floatingInput">Name</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="petFavoriteColor" placeholder="favoriteColor" required>
+  <label for="floatingInput">Favorite Color</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="petSpecialSkill" placeholder="specialSkill" required>
+  <label for="floatingInput">Special Skill</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="text" class="form-control" id="petType" placeholder="typeOfAnimal" required>
+  <label for="floatingInput">Type of Animal</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="url" class="form-control" id="petImage" placeholder="imageOfAnimal" required>
+  <label for="floatingInput">Image URL</label>
+</div>
+<button type="submit" class="btn btn-dark">Create A Card For Your Pet!</button>
+</form>
+  
   <div id="app"></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="main.js"></script>
