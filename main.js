@@ -263,7 +263,7 @@ const pets = [
 
 
 
-// NEW NOTES: the following lines of code are a utility function encompassing a variable that is representing a '.querySelector' method. This .querySelector method is going into the document (HTML) and selecting an element/class/id to latch onto. 'inner.HTML' is used on the varibale after it's declared so then we can manipulate(create/modify/delete) the data on said thing we .querySelect
+// NEW NOTES: the following lines of code are a utility function encompassing a variable that is representing a '.querySelector' method. This .querySelector method is going into the document (HTML) and selecting an element/class/id to latch onto. 'inner.HTML' is used on the varibale after it's declared so then we can manipulate(create/modify/delete) the data on said thing we .querySelect. FIRST, the 'divIdInIndexHtml' is selected and placed into selectedDiv. THEN, selectedDiv (AKA 'divIdInIndexHtml'), is being manipulated by inner.HTML. 
 
 
 const renderToDom = (divIdInIndexHtml, htmlToRenderFromMainJS) => {
@@ -291,11 +291,12 @@ const cardsOnDom = (potentialArray) => {
       <p class="card-text">${pet.name}</p>
       <p class="card-text">${pet.color}</p>
       <p class="card-text">${pet.specialSkill}</p>
+      <button class = "btn btn-outline-danger" id="seeYa--${pet.id}">I'm Out!</button>
     </div>
   </div>`;
   }
 
-  renderToDom("#app", domString);
+  renderToDom("#app", domString); // NEW NOTE: para2 is domString and NOT cardsOnDom because cardsOnDom would upload the code exactly how it looks on JS, meanwhile domString will upload the cards properly.
 };
 
 // OLD NOTES: line (starting with const cardsOnDom) starts another function where this time it is passing in one parameter instead of two like on line( starting with const renderToDom ). 
@@ -381,7 +382,7 @@ const selectForm = document.querySelector('form');
 
 // 2.1. create a function that grabs all the values from the form
 
-const allFormVals = (e)=>{ // NEW NOTES: we plug in the (e) since we are trying to run .preventDefault, or in this case, prevent the page from reloading and not loading in our pet that we just created when we hit the submit button. Using 'e' as a parameter allows methods to run without something to select. If we didn't have this e.preventDefault() method, we would not need (e) to pass through as a parameter at all.
+const allFormVals = (e)=>{ // NEW NOTES: we plug in the (e) since we are trying to run .preventDefault, or in this case, prevent the page from reloading and not loading in our pet that we just created when we hit the submit button. Using 'e' as a parameter allows methods to run without something to select. If we didn't have this e.preventDefault() method, we would not need (e) to pass through as a parameter at all. NOTE: (e) could be labeled as anything, but since we are attaching it to the .preventDefault method, it's purpose becomes what is called an event object (see more on line 426)
   e.preventDefault();
 
   const newMember = { // NEW NOTES: this is an object skeleton that grabs the values from the form. The way an object is structured is key: value. The key has to be the same as the keys in the pets array. The value is what will be shown as a pet card(with exception to id). .value actually accepts the values from the form when submitted.
@@ -407,3 +408,63 @@ const allFormVals = (e)=>{ // NEW NOTES: we plug in the (e) since we are trying 
 // NEW NOTES: This line of code adds an event listener to selectForm, which is the equivalent of form in HTML. We use 'submit' instead of 'click' since we are submitting the values when we press that button and not just clicking a button. Then when we click the submit button, we are running the function allFormVals, which doesn't reload the page, creates a new object, uses the values from the form to fill that new object, pushes the object onto the pet array, shows the updated pets array with the new memeber, and clears the info from the form when everything is done updating.
 
 selectForm.addEventListener('submit', allFormVals);
+
+// ******************** //
+// ****** DELETE ****** //
+// ******************** //
+
+// Here we will be using event bubbling
+// 1. Target the app div
+
+// NEW NOTES: We are targeting the '#app' id because we are looking to edit (delete) the cards that are being brought in from the cardsOnDom function, in particular, that are within the domString string portion of the cardsOnDom function. Remember, renderToDom is the utility function that is selecting the id '#app'(divIdInIndexHtml) to then use the domString(htmlToRenderFromMainJS) string to add the cards from the pets array in JS
+
+const thisIsApp = document.querySelector("#app");
+
+// 2. Add an event listener to capture clicks
+
+// NEW NOTES: Using the variable 'thisIsApp' allows the eventListener to listen for a change in '#app' because rememeber, we made 'thisIsApp' to = '#app'. 
+// NEW NOTES: Using addEventListener, FIRST We are waiting for an event to happen by a user, as we see that is filled in by the word 'click'. 'click' is one of the handful of words that work as an event, so this must be specfic to what you want the code to listen for. THEN, when the event is heard, a function will run to do something in response to the event 'click', which is what we call the handler. The handler is always a function, so this function is what is going to do something in response to the event 'click'. The handler that is being ran has a parameter of (e), which is a parameter that could be labeled anything ((taco), (bacon), (cnTwenty)). Just because it can be labeled anything doesn't change the functionality of it, because the functionality represents what we call an event OBJECT (so remember, (e) = event object). So when we use an event object, we are pretty much applying the same rules as an object in that (e) parameter. What I mean by this is that e is like a starting point of an object, and using dot notation gets us deeper into the object to use the special properties/methods. This object has special properties/methods that can be used when we use dot notation. The special properties include e.target , e.preventDefault , e.type , etc.
+
+thisIsApp.addEventListener('click', (e)=>{
+  
+  // 3. check e.target.id includes "delete" (or in our case, 'seeYa')
+
+  // NEW NOTES: We are using an if statement to look for a specific portion of an id and divide that id into two parts. We use an if statement because we are trying to see IF it's true that an id includes a specific portion within that id. IF the statement is true, then we shall run the code corresponding with that if statement below it. Like we said in line 426, we are using e as like the beginning of an object. So when we get deeper into this object (aka 'event object'), we are going to encounter e's special properties. e has a special property called .target, which tells e that when the event occured, it occured from where that event was exactly initiated. Furthermore, the event object goes deeper because .target is using dot notation to get into .id. With .id, the .target is saying that this is where the event was exactly intitated and wherever that is, I need the id of that. We then get something that says .includes, which is actually a method. It is morso used to see if whatever is plugged into the parameter of .include() is located in the string or array of whatever it selected. So in this case, we are clicking a delete button, clicking that button would run this and say, does this include the portion "xyz" and if it does, run yadaya, if not do nothing. 
+
+  if(e.target.id.includes("seeYa")){
+    const [, identificationNumberToBeDeleted] = e.target.id.split("--");
+    // NEW NOTE: We just finished the note about 434, but 435 is the beginning of what we're actually running in this if statement. The beginning of 435 starts off with us declaring an array and using destructuring in it by having an empty first array element(because that is being ignored later on) and focusing on the second array element. Now why do we need an array in this if statement? Well, what this declaration is equal to is our e.target.id, but we have a new method at the end called .split. With the method .split, this method goes into where it is attached(in the case above, its the targeted id of an event), finds the string in it's parameter (.split('parametered string')) and splits one portion of the code before that parametered string and one portion of the code after that parametered string. Here is a visual example:
+    // NEW NOTE with our code VISUAL: id='seeYa--${pet.id}'. So this .split method will break an id in half and, in the case for the code we are actually running, it will place seeYa in the first element of the array and ${pet.id} in the second element of the array.
+    
+    // 4. add logic to remove from array
+
+// We continue within the if statement. We create another variable. This variable houses a method that is attached to our pets array, and this method is .findIndex(). With .findIndex(), we are using what is called a callback in it's parameter, which is a function that looks through each object of the array and stops sorting through items when the condition is true. In this case, in the parameter, we are passing through eachObjectInPets so then when we are looking through pets, we are using findIndex to go specifically to the id (identification number) of a pet object. NOTE: the '.id' in 'eachObjectInPets.id' is the identification number of the object, it is not being used to select an elements id like it was in 'e.target.id'. Once we are at the identification number, it will check to see if the condition is true: is eachObjectInPets.id (which should be a number) strictly equal to the number value of identificationNumberToBeDeleted (which is a number, but it is a string number)? Number is math function that, in this case, changes any sorts of strings of a number to be an actual number so then it can be rendered properly when looking for it's index in the array. 
+
+const index = pets.findIndex(eachObjectInPets => eachObjectInPets.id === Number(identificationNumberToBeDeleted));
+
+
+// NEW NOTE: We continue within the if statement. This next part is going into the pets array to use a method called .splice(). With .splice(), we are removing items from an array through their index number. In our case, we are using .splice to remove pet objects from our pets arrray. The format would be .splice(starting point index number, number of items to delete). Taking the identification number that was called back to the index variable above, we use that number as the starting point index number of what is to be deleted. Then the next portion of the splice, as we know is the number of items to be deleted. So we are starting at the const index and deleting just that identifcation number.
+
+pets.splice(index, 1);
+
+// 5. Repaint the DOM with the updated array
+
+// NEW NOTE: This is the last part within the if statement. We simply show the cards of the pets again, but this time with all the code that was ran in the event listener function, we have an updated page with 1 less pet on it. If the button that we clicked had an id but that id DID NOT include 'seeYa', all of this delete process wouldn't happen. NOTE: this is the last part of the event listener function as well!
+
+cardsOnDom(pets)
+}
+
+});
+
+// NEW NOTE: We are officially back to the global scope, outside of event listener function. We are creating a new variable. This variable is another function, but it doesn't pass through any parameter. It doesnt need to pass another parameter because it doesn't use one within the function, but it still wants to be ran as a function. This function serves the purpose of showing all of the pets from our array on the screen through cardsOnDom, regardless on whether or not a pet (or more) was created or deleted.
+
+const runApp = () => {
+cardsOnDom(pets);
+}
+
+
+// NEW NOTE: runApp is being invoked to show the pets on the screen after all of the code is updated. Whether we deleted 3 pets or created 2, all of that is being processed above this invoked variable.
+
+runApp()
+
+// 6. Organize code so that everything is in a function except selectors
